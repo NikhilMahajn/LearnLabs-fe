@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import CourseCard from "../common/CourseCard";
 import { useState,useEffect } from "react";
-
+import {Link} from "react-router-dom"
 export default function CourseList() {
 	const courses = ["html","css","javascript","Python"]
 	const [courseList, setCourseList] = useState([])
@@ -23,7 +23,9 @@ export default function CourseList() {
     <Grid container spacing={2} >
       {courseList.map((item) => (
         <Grid item key={item.id} xs={12} sm={6} md={4}>
-          <CourseCard course={item} />
+			<Link to="/course">
+          		<CourseCard course={item} />
+		  	</Link>
         </Grid>
       ))}
     </Grid>

@@ -1,7 +1,7 @@
 import CourseList from "../components/course/CourseGrid"
-
+import { Link,useNavigate } from "react-router-dom"
 function Home(){
-
+  const navigate = useNavigate()
 	return (
 	<div>
       {/* Hero Section */}
@@ -17,9 +17,10 @@ function Home(){
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
               className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center"
-            >
+              >
               Start Learning
             </button>
+
 
           </div>
 
