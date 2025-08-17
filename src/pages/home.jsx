@@ -1,4 +1,5 @@
 import CourseList from "../components/course/CourseGrid"
+
 function Home(){
 
 	return (
@@ -23,12 +24,13 @@ function Home(){
           </div>
 
         </div>
-        
+      
       </section>
+      <section className="flex flex-col mx-10">
+        <div className="mx-10 my-5">
+          <h1 className="text-5xl ">Courses</h1>
+        </div>
         <CourseList/>
-      <section>
-
-
       </section>
 	</div>
 	)

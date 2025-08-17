@@ -6,17 +6,16 @@ import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 
-export default function CourseCard(prop) {
+export default function CourseCard({course}) {
   return (
     <Card sx={{ maxWidth: 400,minWidth: 400,minHeight: 250, boxShadow: 3, borderRadius: 3 }} className='m-10'>
   
       <CardContent>
         <Typography gutterBottom variant="h3" component="div">
-          {prop.item}
+          {course.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          This is a simple example of a Material UI card with an image, title, 
-          and description. You can customize it easily.
+          {course.description}.
         </Typography>
       </CardContent>
       <CardActions>
