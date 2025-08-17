@@ -26,12 +26,15 @@ function Home(){
         </div>
       
       </section>
-      <section className="flex flex-col mx-10">
-        <div className="mx-10 my-5">
-          <h1 className="text-5xl ">Courses</h1>
-        </div>
-        <CourseList/>
-      </section>
+     <section className="px-4 sm:px-6 lg:px-10 my-5">
+      <div>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl my-10">
+          Courses
+        </h1>
+      </div>
+      <CourseList />
+    </section>
+
 	</div>
 	)
 }

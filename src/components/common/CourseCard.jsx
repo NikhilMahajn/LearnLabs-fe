@@ -8,19 +8,27 @@ import Button from '@mui/material/Button';
 
 export default function CourseCard({course}) {
   return (
-    <Card sx={{ maxWidth: 450,minWidth: 350,minHeight: 250, boxShadow: 3, borderRadius: 3 }} className='m-10'>
-  
-      <CardContent>
-        <Typography gutterBottom variant="h3" component="div">
-          {course.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {course.description}.
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="medium">Start Learning</Button>
-      </CardActions>
-    </Card>
+   <Card
+        sx={{
+          width: { xs: "100%", sm: 350, md: 400, lg: 430 }, // responsive widths
+          minHeight: 250,
+          boxShadow: 3,
+          borderRadius: 3,
+          m: 2, // margin shorthand
+        }}
+    >
+  <CardContent>
+    <Typography gutterBottom variant="h5" component="div">
+      {course.name}
+    </Typography>
+    <Typography variant="body2" color="text.secondary">
+      {course.description}.
+    </Typography>
+  </CardContent>
+  <CardActions>
+    <Button size="medium">Start Learning</Button>
+  </CardActions>
+</Card>
+
   );
 }
