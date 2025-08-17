@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 
 export default function CourseCard({course}) {
   return (
-    <Card sx={{ maxWidth: 400,minWidth: 400,minHeight: 250, boxShadow: 3, borderRadius: 3 }} className='m-10'>
+    <Card sx={{ maxWidth: 450,minWidth: 350,minHeight: 250, boxShadow: 3, borderRadius: 3 }} className='m-10'>
   
       <CardContent>
         <Typography gutterBottom variant="h3" component="div">
