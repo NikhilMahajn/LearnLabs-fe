@@ -18,7 +18,7 @@ export default function CourseCard({course}) {
     >
   <CardContent>
     <Typography gutterBottom variant="h5" component="div">
-      {course.name}
+      {course.title}
     </Typography>
     <Typography variant="body2" color="text.secondary">
       {course.description}.

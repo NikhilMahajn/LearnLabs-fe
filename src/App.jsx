@@ -13,7 +13,7 @@ function App() {
       <Header/>
     	<Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/course" element={<CourseContentPage/>} />
+        <Route path="/course/:id" element={<CourseContentPage/>} />
       </Routes>
       <Footer/>
 
@@ -25,3 +25,5 @@ function App() {
 }
 
 export default App
+
+export const live_url = import.meta.env.VITE_API_URL

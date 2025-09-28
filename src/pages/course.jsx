@@ -1,197 +1,78 @@
-
-
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Menu, X, BookOpen, Play, Copy, Check, Home, Star, Clock, Users, Eye, EyeOff, Code, Lightbulb, AlertCircle, Trophy, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  ChevronLeft, ChevronRight, Menu, X, BookOpen, Copy, Check,
+  Home, Star, Clock, Users, Lightbulb, AlertCircle
+} from 'lucide-react';
+import { live_url } from '../App';
+import { useParams } from 'react-router-dom';
 
 const CourseContentPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [copiedCode, setCopiedCode] = useState('');
   const [completedLessons, setCompletedLessons] = useState(new Set([0]));
-  const [showHint, setShowHint] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const course = {
-    title: "React Fundamentals",
-    description: "Master React components, hooks, and state management",
+  const { id } = useParams();
+
+  const [course, setCourse] = useState({
+    title: "Default Course",
+    description: "Default course description",
     totalLessons: 12,
     duration: "8 hours",
     level: "Beginner",
-    students: 15420
-  };
+  });
 
-  const lessons = [
-    {
-      id: 0,
-      title: "Introduction to React",
-      duration: "15 min",
-      type: "lesson",
-      sections: [
-        {
-          type: "content",
-          title: "What is React?",
-          content: `React is a popular JavaScript library for building user interfaces, particularly web applications. Created by Facebook (now Meta), React has revolutionized how developers think about building interactive UIs.
+  const [chapters, setChapterList] = useState([]);
+  const [lessons, setLessons] = useState([]);
 
-**Key Features of React:**
-- **Component-Based Architecture**: Build encapsulated components that manage their own state
-- **Virtual DOM**: Efficient updates and rendering
-- **Declarative**: Describe what the UI should look like for any given state
-- **Learn Once, Write Anywhere**: Use React for web, mobile, and desktop applications`
-        },
-        {
-          type: "info",
-          title: "Why Learn React?",
-          content: `React is one of the most in-demand skills in web development today. Here's why:
-
-• **High Demand**: React developers are among the most sought-after in the job market
-• **Versatile**: Use React for web apps, mobile apps (React Native), and even desktop apps
-• **Strong Community**: Large ecosystem with extensive resources and third-party libraries
-• **Backed by Meta**: Continuous development and long-term support guaranteed`
-        },
-        {
-          type: "code",
-          title: "Your First React Component",
-          language: "jsx",
-          content: `import React from 'react';
-
-// A simple React component
-function Welcome(props) {
-  return <h1>Hello, {props.name}!</h1>;
-}
-
-// Using the component
-function App() {
-  return (
-    <div>
-      <Welcome name="Sarah" />
-      <Welcome name="Cahal" />
-      <Welcome name="Edite" />
-    </div>
-  );
-}
-
-export default App;`,
-          explanation: "This example shows a simple React component that takes a 'name' prop and displays a greeting. Notice how we can reuse the same component with different props."
-        },
-        {
-          type: "tip",
-          content: "Components are the building blocks of React applications. Start thinking in components - break your UI into small, reusable pieces!"
-        }
-      ]
-    },
-    {
-      id: 1,
-      title: "JSX Syntax",
-      duration: "20 min",
-      type: "lesson",
-      sections: [
-        {
-          type: "content",
-          title: "Understanding JSX",
-          content: `JSX (JavaScript XML) is a syntax extension for JavaScript that looks similar to HTML. It allows you to write HTML-like code directly in your JavaScript files.
-
-**Key Points about JSX:**
-- JSX is not HTML - it's a syntax extension for JavaScript
-- It gets compiled to regular JavaScript function calls
-- You can embed JavaScript expressions using curly braces {}
-- JSX elements must have a closing tag or be self-closing`
-        },
-        {
-          type: "code",
-          title: "JSX Examples",
-          language: "jsx",
-          content: `// JSX allows you to write HTML-like syntax in JavaScript
-const element = <h1>Hello, World!</h1>;
-
-// You can embed JavaScript expressions in JSX
-const name = 'John';
-const greeting = <h1>Hello, {name}!</h1>;
-
-// JSX can contain multiple elements (must be wrapped in a parent)
-const content = (
-  <div>
-    <h1>Welcome to React</h1>
-    <p>Let's learn JSX together!</p>
-    <button onClick={() => alert('Clicked!')}>
-      Click me!
-    </button>
-  </div>
-);
-
-// JSX attributes use camelCase
-const styledElement = (
-  <div 
-    className="container" 
-    style={{backgroundColor: 'blue', color: 'white'}}
-  >
-    Styled content
-  </div>
-);`,
-          explanation: "JSX makes React components more readable and allows you to use familiar HTML-like syntax while having the full power of JavaScript."
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: "Components & Props",
-      duration: "25 min",
-      type: "lesson",
-      sections: [
-        {
-          type: "content",
-          title: "React Components",
-          content: `Components are the building blocks of React applications. They let you split the UI into independent, reusable pieces.
-
-**Two Types of Components:**
-- **Function Components**: Simple functions that return JSX
-- **Class Components**: ES6 classes that extend React.Component (legacy approach)
-
-**Props (Properties):**
-Props are how you pass data from parent to child components. They are read-only and help make components reusable.`
-        },
-        {
-          type: "code",
-          title: "Function Component with Props",
-          language: "jsx",
-          content: `// UserCard component that accepts props
-function UserCard({ name, email, avatar, isOnline }) {
-  return (
-    <div className="user-card">
-      <img src={avatar} alt={name} />
-      <div className="user-info">
-        <h3>{name}</h3>
-        <p>{email}</p>
-        <span className={isOnline ? 'online' : 'offline'}>
-          {isOnline ? '🟢 Online' : '🔴 Offline'}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-// Using the UserCard component
-function UserList() {
-  return (
-    <div>
-      <UserCard 
-        name="Alice Johnson"
-        email="alice@example.com"
-        avatar="/avatars/alice.jpg"
-        isOnline={true}
-      />
-      <UserCard 
-        name="Bob Smith"
-        email="bob@example.com"
-        avatar="/avatars/bob.jpg"
-        isOnline={false}
-      />
-    </div>
-  );
-}`,
-          explanation: "This example shows how to create a reusable UserCard component that accepts props for customization. The same component can display different users with different data."
-        }
-      ]
+  useEffect(() => {
+    async function fetch_course_by_id(course_id) {
+      const data = await fetch(`${live_url}/course/${course_id}`);
+      const jsonData = await data.json();
+      setCourse(jsonData);
     }
-  ];
+    fetch_course_by_id(id);
+  }, [id]);
+
+  // First effect: Fetch chapters
+useEffect(() => {
+  async function fetch_chapters(course_id) {
+    try {
+      const data = await fetch(`${live_url}/course/chapters/${course_id}`);
+      const jsonData = await data.json();
+      setChapterList(jsonData);
+    } catch (error) {
+      console.error('Error fetching chapters:', error);
+      setLoading(false);
+    }
+  }
+  
+  fetch_chapters(id);
+}, [id]);
+
+// Second effect: Fetch sections when chapters are loaded
+useEffect(() => {
+  async function fetch_sections() {
+    if (chapters && chapters.length > 0 && chapters[currentLesson]) {
+      try {
+        console.log(chapters[currentLesson]);
+        const chapter_data = await fetch(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
+        const chapter_json = await chapter_data.json();
+        setLessons(chapter_json);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching sections:', error);
+        setLoading(false);
+      }
+    }
+  }
+  
+  fetch_sections();
+}, [chapters, currentLesson]); // Runs when chapters or currentLesson changes
+
+  const progress = lessons.length > 0 ? ((completedLessons.size) / lessons.length) * 100 : 0;
+  const currentLessonData = lessons[currentLesson] || null;
 
   const copyToClipboard = async (code, id) => {
     try {
@@ -216,9 +97,6 @@ function UserList() {
     }
   };
 
-  const currentLessonData = lessons[currentLesson];
-  const progress = ((completedLessons.size) / lessons.length) * 100;
-
   const SectionRenderer = ({ section, index }) => {
     switch (section.type) {
       case 'content':
@@ -233,13 +111,7 @@ function UserList() {
                       {paragraph.replace(/\*\*/g, '')}
                     </h3>
                   );
-                } else if (paragraph.startsWith('•')) {
-                  return (
-                    <li key={i} className="text-gray-600 ml-4">
-                      {paragraph.substring(2)}
-                    </li>
-                  );
-                } else if (paragraph.startsWith('-')) {
+                } else if (paragraph.startsWith('•') || paragraph.startsWith('-')) {
                   return (
                     <li key={i} className="text-gray-600 ml-4">
                       {paragraph.substring(2)}
@@ -325,6 +197,11 @@ function UserList() {
     }
   };
 
+  // ✅ Guard: show loader if no lesson available yet
+  if (loading || !currentLessonData) {
+    return <div className="min-h-screen flex items-center justify-center text-xl">Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
@@ -339,7 +216,7 @@ function UserList() {
               <X className="w-5 h-5" />
             </button>
           </div>
-          
+
           {/* Progress */}
           <div className="mb-4">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
@@ -347,7 +224,7 @@ function UserList() {
               <span>{Math.round(progress)}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               ></div>
@@ -368,9 +245,9 @@ function UserList() {
 
         {/* Lesson List */}
         <div className="flex-1 overflow-y-auto">
-          {lessons.map((lesson, index) => (
+          {chapters.map((lesson, index) => (
             <button
-              key={lesson.id}
+              key={lesson.id || index}
               onClick={() => setCurrentLesson(index)}
               className={`w-full text-left p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
                 currentLesson === index ? 'bg-blue-50 border-r-2 border-r-blue-500' : ''
@@ -391,7 +268,7 @@ function UserList() {
                   <h3 className={`font-medium ${currentLesson === index ? 'text-blue-700' : 'text-gray-800'}`}>
                     {lesson.title}
                   </h3>
-                  <p className="text-sm text-gray-500">{lesson.duration}</p>
+                  <p className="text-sm text-gray-500">{lesson.estimated_duration}</p>
                 </div>
               </div>
             </button>
@@ -411,7 +288,7 @@ function UserList() {
               >
                 <Menu className="w-5 h-5" />
               </button>
-              
+
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <Home className="w-4 h-4" />
                 <span>/</span>
@@ -449,11 +326,11 @@ function UserList() {
                     </div>
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
-                      {course.students.toLocaleString()} students
+                      {10} students
                     </div>
                   </div>
                 </div>
-                
+
                 {!completedLessons.has(currentLesson) && (
                   <button
                     onClick={() => markLessonComplete(currentLesson)}
@@ -468,7 +345,7 @@ function UserList() {
 
             {/* Lesson Sections */}
             <div className="space-y-6">
-              {currentLessonData.sections.map((section, index) => (
+              {lessons.map((section, index) => (
                 <SectionRenderer key={index} section={section} index={index} />
               ))}
             </div>
