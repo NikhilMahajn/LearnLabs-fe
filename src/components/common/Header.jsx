@@ -1,15 +1,19 @@
 import {Code} from 'lucide-react'
+import Logo from '../../assets/logo.png'
 function Header(){
   
 	return (
   <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <Code className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">LearnLabs</span>
-            </div>
+      <div className="mx-auto  sm:px-6 lg:px-8">
+        <div className="flex items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0 flex items-center mr-auto">
+            <img 
+              src={Logo} 
+              alt="LearnLabs Logo" 
+              className="h-12 w-auto"   // controls size
+            />
+
           </div>
 
           {/* Desktop Navigation */}
@@ -30,7 +34,7 @@ function Header(){
             */}
             </nav>
 
-          {/* Search Bar 
+          {/* Search Bar }
           <div className="flex-1 max-w-lg mx-8 hidden md:block">
             <div className="relative">
              <SearchBar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />

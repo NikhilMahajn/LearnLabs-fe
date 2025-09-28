@@ -20,15 +20,14 @@ export default function CourseList() {
 )
 
 	return (
-    <Grid container spacing={2} >
-      {courseList.map((item) => (
-        <Grid item key={item.id} xs={12} sm={6} md={4}>
-			<Link to={`/course/${item.id}`}>
-          		<CourseCard course={item} />
-		  	</Link>
-        </Grid>
-      ))}
-    </Grid>
-  );
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+		{courseList.map((item) => (
+		<Link to={`/course/${item.id}`}>
+			<CourseCard course={item} />
+		</Link>
+		))}
+	</div>
+);
+
 
 }
