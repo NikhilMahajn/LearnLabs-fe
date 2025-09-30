@@ -27,6 +27,10 @@ const CourseContentPage = () => {
   const [lessons, setLessons] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     async function fetch_course_by_id(course_id) {
       const data = await fetch(`${live_url}/course/${course_id}`);
       const jsonData = await data.json();
@@ -238,7 +242,7 @@ useEffect(() => {
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              {course.duration}
+              {course.duration / 60} Hrs
             </div>
           </div>
         </div>
@@ -268,7 +272,10 @@ useEffect(() => {
                   <h3 className={`font-medium ${currentLesson === index ? 'text-blue-700' : 'text-gray-800'}`}>
                     {lesson.title}
                   </h3>
-                  <p className="text-sm text-gray-500">{lesson.estimated_duration}</p>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                      <Clock className="w-4 h-7" />
+                      {lesson.estimated_duration} Minutes
+                    </div>
                 </div>
               </div>
             </button>
@@ -308,7 +315,7 @@ useEffect(() => {
 
         {/* Lesson Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-6">
+          <div className="max-w-7xl mx-auto p-6">
             {/* Lesson Header */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
@@ -320,10 +327,7 @@ useEffect(() => {
                     {currentLessonData.title}
                   </h1>
                   <div className="flex items-center gap-4 text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {currentLessonData.duration}
-                    </div>
+
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
                       {10} students

@@ -20,7 +20,7 @@ export default function CourseList() {
 )
 
 	return (
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-center gap-9 ">
 		{courseList.map((item) => (
 		<Link to={`/course/${item.id}`}>
 			<CourseCard course={item} />
