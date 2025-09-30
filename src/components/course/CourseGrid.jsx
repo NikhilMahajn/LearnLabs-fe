@@ -9,7 +9,6 @@ export default function CourseList() {
 	 
 	useEffect(()=>{
 		async function fetch_courses(){
-			console.log(`${live_url}/course/`)
 			const data = await fetch(`${live_url}/course/`)
 			const jsonData = await data.json()
 			setCourseList(jsonData)

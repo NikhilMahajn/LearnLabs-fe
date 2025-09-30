@@ -60,7 +60,6 @@ useEffect(() => {
   async function fetch_sections() {
     if (chapters && chapters.length > 0 && chapters[currentLesson]) {
       try {
-        console.log(chapters[currentLesson]);
         const chapter_data = await fetch(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
         const chapter_json = await chapter_data.json();
         setLessons(chapter_json);
