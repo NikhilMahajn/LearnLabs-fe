@@ -99,9 +99,9 @@ useEffect(() => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-white shadow-lg flex flex-col overflow-hidden`}>
+      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} left-0 transition-all duration-300 bg-white shadow-lg flex flex-col h-screen overflow-y-auto `}>
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-gray-800 truncate">{course.title}</h2>
@@ -176,7 +176,7 @@ useEffect(() => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col ">
         {/* Header */}
         <div className="bg-white shadow-sm border-b p-4">
           <div className="flex items-center justify-between">
