@@ -1,23 +1,40 @@
 import CourseList from "../components/course/CourseGrid"
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState,useEffect,useContext,createContext } from "react"
+import {live_url} from "../App"
+
+export const CourseListContext = createContext()
 
 function Home() {
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState("")
-
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      // You can navigate to search results page or filter courses
-      console.log("Searching for:", searchQuery)
-      // navigate(`/search?q=${encodeURIComponent(searchQuery)}`)
-    }
-  }
-
   const popularSearches = ["React", "Python", "JavaScript", "CSS", "Node.js"]
+  const [allCourses,setAllCourses] = useState([])
+  const [courseList, setCourseList] = useState([])
+	 
+	useEffect(()=>{
+		async function fetch_courses(){
+			const data = await fetch(`${live_url}/course/`)
+			const jsonData = await data.json()
+			setCourseList(jsonData)
+      setAllCourses(jsonData)
+		}
+		fetch_courses()
+	},[]
+)
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setCourseList(allCourses) // reset when empty
+    } else {
+      const res = allCourses.filter(course =>
+        course.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      setCourseList(res)
+    }
+  }, [searchQuery, allCourses])
 
   return (
+    <CourseListContext.Provider value={courseList}>
     <div>
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
@@ -32,7 +49,7 @@ function Home() {
 
           {/* Search Bar Section */}
           <div className="max-w-2xl mx-auto mb-8">
-            <form onSubmit={handleSearch} className="relative">
+            <form className="relative">
               <div className="relative flex items-center">
                 <input
                   type="text"
@@ -103,6 +120,7 @@ function Home() {
         <CourseList />
       </section>
     </div>
+    </CourseListContext.Provider>
   )
 }
 

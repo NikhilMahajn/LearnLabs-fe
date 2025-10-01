@@ -8,7 +8,6 @@ export default function Footer(){
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <Code className="h-6 w-6 text-blue-400" />
                 <span className="ml-2 text-lg font-bold">LearnLabs</span>
               </div>
               <p className="text-gray-300 text-sm">
