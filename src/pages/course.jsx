@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ChevronLeft, ChevronRight, Menu, X, BookOpen, Copy, Check,
   Home, Star, Clock, Users, Lightbulb, AlertCircle
@@ -12,6 +12,8 @@ const CourseContentPage = () => {
   const [currentLesson, setCurrentLesson] = useState(0);
   const [completedLessons, setCompletedLessons] = useState(new Set([0]));
   const [loading, setLoading] = useState(true);
+  const [chapters, setChapterList] = useState([]);
+  const [lessons, setLessons] = useState([]);
 
   const { id } = useParams();
 
@@ -21,13 +23,12 @@ const CourseContentPage = () => {
     totalLessons: 12,
     duration: "8 hours",
     level: "Beginner",
-  });
+  })
 
-  const [chapters, setChapterList] = useState([]);
-  const [lessons, setLessons] = useState([]);
+  const topRef = useRef(null)
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0)
   }, []);
 
   useEffect(() => {
@@ -40,43 +41,47 @@ const CourseContentPage = () => {
   }, [id]);
 
   // First effect: Fetch chapters
-useEffect(() => {
-  async function fetch_chapters(course_id) {
-    try {
-      const data = await fetch(`${live_url}/course/chapters/${course_id}`);
-      const jsonData = await data.json();
-      setChapterList(jsonData);
-    } catch (error) {
-      console.error('Error fetching chapters:', error);
-      setLoading(false);
-    }
-  }
-  
-  fetch_chapters(id);
-  const interval = setInterval(() => {
-      fetch_chapters(id);
-    }, 30000);
-  
-}, [id]);
-
-// Second effect: Fetch sections when chapters are loaded
-useEffect(() => {
-  async function fetch_sections() {
-    if (chapters && chapters.length > 0 && chapters[currentLesson]) {
+  useEffect(() => {
+    async function fetch_chapters(course_id) {
       try {
-        const chapter_data = await fetch(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
-        const chapter_json = await chapter_data.json();
-        setLessons(chapter_json);
+        const data = await fetch(`${live_url}/course/chapters/${course_id}`);
+        const jsonData = await data.json();
+        setChapterList(jsonData);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching sections:', error);
+        console.error('Error fetching chapters:', error);
         setLoading(false);
       }
     }
-  }
-  
-  fetch_sections();
-}, [chapters, currentLesson]); // Runs when chapters or currentLesson changes
+
+    fetch_chapters(id); // call immediately
+
+    const interval = setInterval(() => {
+      fetch_chapters(id);
+    }, 30000); // every 30 sec
+
+    // cleanup function
+    return () => clearInterval(interval);
+  }, [id]); // re-run when id changes
+
+  // Second effect: Fetch sections when chapters are loaded
+  useEffect(() => {
+    async function fetch_sections() {
+      if (chapters && chapters.length > 0 && chapters[currentLesson]) {
+        try {
+          const chapter_data = await fetch(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
+          const chapter_json = await chapter_data.json();
+          setLessons(chapter_json);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching sections:', error);
+          setLoading(false);
+        }
+      }
+    }
+    
+    fetch_sections();
+  }, [chapters, currentLesson]); // Runs when chapters or currentLesson changes
 
   const progress = lessons.length > 0 ? ((completedLessons.size) / lessons.length) * 100 : 0;
   const currentLessonData = lessons[currentLesson] || null;
@@ -93,6 +98,7 @@ useEffect(() => {
     } else if (direction === 'prev' && currentLesson > 0) {
       setCurrentLesson(currentLesson - 1);
     }
+    topRef.current?.scrollIntoView();
   };
 
   
@@ -102,7 +108,7 @@ useEffect(() => {
   }
 
   return (
-  <div className="h-screen bg-gray-50 flex overflow-hidden">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
     {/* Sidebar */}
     <div 
       className={`${
@@ -203,7 +209,7 @@ useEffect(() => {
     )}
 
     {/* Main Content */}
-    <div className="flex-1 flex flex-col min-w-0">
+    <div className="flex-1 flex flex-col min-w-0" >
       {/* Header */}
       <div className="bg-white shadow-sm border-b p-3 sm:p-4 flex-shrink-0">
         <div className="flex items-center justify-between gap-2">
@@ -240,6 +246,7 @@ useEffect(() => {
 
       {/* Lesson Content */}
       <div className="flex-1 overflow-y-auto">
+        <div ref={topRef}></div>
         <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
           {/* Lesson Header */}
           <div className="mb-6 sm:mb-8">
