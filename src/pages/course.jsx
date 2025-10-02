@@ -53,6 +53,10 @@ useEffect(() => {
   }
   
   fetch_chapters(id);
+  const interval = setInterval(() => {
+      fetch_chapters(id);
+    }, 30000);
+  
 }, [id]);
 
 // Second effect: Fetch sections when chapters are loaded
