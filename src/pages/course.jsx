@@ -112,8 +112,8 @@ const CourseContentPage = () => {
     {/* Sidebar */}
     <div 
       className={`${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } fixed lg:relative lg:translate-x-0 z-30 w-80 transition-transform duration-300 bg-white shadow-lg flex flex-col h-screen`}
+    sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+  } fixed lg:relative z-30 w-80 transition-transform duration-300 bg-white shadow-lg flex flex-col h-screen`}
     >
       <div className="p-3 sm:p-4 border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
