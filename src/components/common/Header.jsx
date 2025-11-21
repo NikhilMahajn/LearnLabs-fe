@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { User } from 'lucide-react'
 import { useAuth } from '../../context/authContext'
 import Logo from '../../assets/logo.png'
+import { GraduationCap } from 'lucide-react'
 
 function Header() {
   const [activeTab, setActiveTab] = useState('home')
@@ -55,7 +56,7 @@ function Header() {
 
             {!isAuthenticated ? (
               <Link to="/login">
-                <button className="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold cursor-pointer transition">
+                <button className="px-4 py-2 rounded-l bg-blue-500 hover:bg-blue-600 text-white font-semibold cursor-pointer transition">
                   Sign In
                 </button>
               </Link>
