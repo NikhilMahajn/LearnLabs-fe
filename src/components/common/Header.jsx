@@ -1,24 +1,35 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Code, User } from 'lucide-react'
+import { User } from 'lucide-react'
+import { useAuth } from '../../context/authContext'
 import Logo from '../../assets/logo.png'
 
 function Header() {
   const [activeTab, setActiveTab] = useState('home')
-  const [searchQuery, setSearchQuery] = useState('')
+  const { isAuthenticated, logout } = useAuth()
+  const [openMenu, setOpenMenu] = useState(false)
+  const dropdownRef = useRef()
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenMenu(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center h-16 justify-between">
+
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center mr-auto">
             <Link to="/">
-              <img
-                src={Logo}
-                alt="LearnLabs Logo"
-                className="h-12 w-auto"
-              />
+              <img src={Logo} alt="LearnLabs Logo" className="h-12 w-auto" />
             </Link>
           </div>
 
@@ -39,25 +50,55 @@ function Header() {
             ))}
           </nav>
 
-          {/* Profile Icon */}
-          <div className="flex items-center ml-6">
-            <Link to="/signup">
-              <button
-                className="p-2 rounded-full hover:bg-gray-100 transition"
-                title="Profile"
-              >
-                <User className="h-6 w-6 text-gray-700 hover:text-blue-600" />
-              </button>
-            </Link>
+          {/* Right Section */}
+          <div className="flex items-center ml-6" ref={dropdownRef}>
+
+            {!isAuthenticated ? (
+              <Link to="/login">
+                <button className="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-semibold cursor-pointer transition">
+                  Sign In
+                </button>
+              </Link>
+            ) : (
+              <>
+                {/* Profile Icon */}
+                <button
+                  className="p-2 rounded-full hover:bg-gray-100 transition"
+                  onClick={() => setOpenMenu(!openMenu)}
+                >
+                  <User className="h-6 w-6 text-gray-700 hover:text-blue-600" />
+                </button>
+
+                {/* Dropdown */}
+                {openMenu && (
+                  <div className="absolute right-6 top-16 w-44 bg-white shadow-lg border rounded-xl py-2 animate-fadeIn">
+                    
+                    <button
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                    >
+                      My Profile
+                    </button>
+
+                    <button
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                    >
+                      Settings
+                    </button>
+
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600"
+                    >
+                      Logout
+                    </button>
+
+                  </div>
+                )}
+              </>
+            )}
+
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden ml-3">
-            <button className="text-gray-700 hover:text-blue-600">
-              {/* You can toggle menu here later */}
-              {/* {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />} */}
-            </button>
-          </div>
         </div>
       </div>
     </header>

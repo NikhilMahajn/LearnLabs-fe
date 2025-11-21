@@ -2,11 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { live_url } from "../App";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState(""); // email or username
   const [password, setPassword] = useState("");
   const navigate = useNavigate()
+  const {isAuthenticated,login} = useAuth();
+  
   const handleLogin = async () => {
     if (!identifier) return alert("Enter email or username");
     if (!password) return alert("Enter password");
@@ -26,9 +29,7 @@ export default function Login() {
 
       if (res.ok) {
         alert("Login successful!");
-        
-        // Store token or redirect if needed
-        localStorage.setItem("token", data.access_token)
+        login(data.access_token);
         navigate("/");
 
       } else {
