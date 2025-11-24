@@ -5,14 +5,14 @@ import Home from './pages/home';
 import CourseContentPage from './pages/course';
 import Signup from './pages/signup';
 import Login from './pages/login' ;
-
 import {Routes,Route} from 'react-router-dom'
-
+import TopLoader from './components/common/loader';
 function App() {  
   
   return (
     <>
       <Header/>
+      <TopLoader/>
     	<Routes>
         <Route path="/" element={<Home />} />
         <Route path="/course/:id" element={<CourseContentPage/>} />

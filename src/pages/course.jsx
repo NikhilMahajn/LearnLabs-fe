@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import SectionRenderer from '../components/course/CourseContent';
 import { useAuth } from '../context/authContext';
 import api from '../api/axios';
+import TopBarLoader from '../components/common/loader';
 
 const CourseContentPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -151,7 +152,7 @@ const CourseContentPage = () => {
   
 
   if (loading || !currentLessonData) {
-    return <div className="min-h-screen flex items-center justify-center text-xl">Loading...</div>;
+    return <div className="min-h-screen flex items-center justify-center text-xl"></div>;
   }
 
   return (

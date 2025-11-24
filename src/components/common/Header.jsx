@@ -4,7 +4,7 @@ import { User } from 'lucide-react'
 import { useAuth } from '../../context/authContext'
 import Logo from '../../assets/logo.png'
 import { GraduationCap } from 'lucide-react'
-
+import TopLoader from './loader'
 function Header() {
   const [activeTab, setActiveTab] = useState('home')
   const { isAuthenticated, logout } = useAuth()
@@ -103,6 +103,7 @@ function Header() {
         </div>
       </div>
     </header>
+  
   )
 }
 

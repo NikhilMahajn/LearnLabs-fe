@@ -2,7 +2,8 @@ import CourseList from "../components/course/CourseGrid"
 import { Link, useNavigate } from "react-router-dom"
 import { useState,useEffect,useContext,createContext } from "react"
 import {live_url} from "../App"
-import api from "../api/axios"
+import { useApi } from "../api/axios"
+
 export const CourseListContext = createContext()
 
 function Home() {
@@ -11,6 +12,7 @@ function Home() {
   const popularSearches = ["React", "Python", "JavaScript", "CSS", "Node.js"]
   const [allCourses,setAllCourses] = useState([])
   const [courseList, setCourseList] = useState([])
+  const api = useApi();
 
   useEffect(()=>{
     const fetchCourses = async ()=> {

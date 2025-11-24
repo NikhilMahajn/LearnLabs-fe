@@ -1,0 +1,38 @@
+#nprogress {
+  pointer-events: none;
+}
+
+/* Main Bar */
+#nprogress .bar {
+  background: linear-gradient(90deg, #2563eb, #3b82f6, #60a5fa);
+  height: 4px !important;
+  border-radius: 0 0 6px 6px;
+  position: fixed;
+  top: 64px; /* Header height */
+  left: 0;
+  width: 100%;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+  z-index: 99999 !important;
+}
+
+/* Glow pulse */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0;
+  width: 120px;
+  height: 100%;
+  opacity: 1;
+  transform: rotate(3deg) translateY(-4px);
+  box-shadow: 0 0 12px #3b82f6, 0 0 6px #60a5fa;
+}
+
+/* Fade-out animation */
+#nprogress .bar {
+  transition: opacity 0.4s ease-out !important;
+}
+
+/* Hide spinner */
+#nprogress .spinner {
+  display: none !important;
+}
