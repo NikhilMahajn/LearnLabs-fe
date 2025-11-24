@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { live_url } from "../App";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
+import api from "../api/axios";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const {login} = useAuth();
 
   const handlerSignUp = async () => {
     if (!email) return alert("Enter email");
@@ -15,26 +20,21 @@ export default function Signup() {
     if (!password) return alert("Enter password");
 
     try {
-      const res = await fetch(`${live_url}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      
+      const res = await api.post(`${live_url}/auth/signup`,{
           email,
           password,
           username,
           full_name: name,
-        }),
       });
 
-      const data = await res.json();
+      const data = res.data;
       console.log("Signup Response:", data);
-
-      if (res.ok) {
-        alert("Signup successful!");
-      } else {
-        alert(data.message || "Signup failed");
-      }
-    } catch (error) {
+      alert("Signup successful!");      
+      login(res.data.access_token);
+      navigate("/");
+    }
+    catch (error) {
       console.error(error);
       alert("Network error!");
     }

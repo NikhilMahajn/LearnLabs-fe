@@ -6,6 +6,8 @@ import {
 import { live_url } from '../App';
 import { useParams } from 'react-router-dom';
 import SectionRenderer from '../components/course/CourseContent';
+import { useAuth } from '../context/authContext';
+import api from '../api/axios';
 
 const CourseContentPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -26,27 +28,31 @@ const CourseContentPage = () => {
   })
 
   const topRef = useRef(null)
+  const {isAuthenticated,user_id} = useAuth();
 
   useEffect(() => {
     window.scrollTo(0,0)
   }, []);
 
-  useEffect(() => {
-    async function fetch_course_by_id(course_id) {
-      const data = await fetch(`${live_url}/course/${course_id}`);
-      const jsonData = await data.json();
-      setCourse(jsonData);
+useEffect(() => {
+  const fetchCourseById = async () => {
+    try {
+      const res = await api.get(`/course/${id}`);
+      setCourse(res.data);
+    } catch (error) {
+      console.error("Error fetching course:", error);
     }
-    fetch_course_by_id(id);
-  }, [id]);
+  };
+
+  if (id) fetchCourseById();
+}, [id]);
 
   // First effect: Fetch chapters
   useEffect(() => {
     async function fetch_chapters(course_id) {
       try {
-        const data = await fetch(`${live_url}/course/chapters/${course_id}`);
-        const jsonData = await data.json();
-        setChapterList(jsonData);
+        const res = await api.get(`${live_url}/course/chapters/${course_id}`);
+        setChapterList(res.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching chapters:', error);
@@ -54,24 +60,21 @@ const CourseContentPage = () => {
       }
     }
 
-    fetch_chapters(id); // call immediately
+    fetch_chapters(id); 
 
     const interval = setInterval(() => {
       fetch_chapters(id);
-    }, 30000); // every 30 sec
+    }, 30000); 
 
-    // cleanup function
     return () => clearInterval(interval);
-  }, [id]); // re-run when id changes
+  }, [id]); 
 
-  // Second effect: Fetch sections when chapters are loaded
   useEffect(() => {
     async function fetch_sections() {
       if (chapters && chapters.length > 0 && chapters[currentLesson]) {
         try {
-          const chapter_data = await fetch(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
-          const chapter_json = await chapter_data.json();
-          setLessons(chapter_json);
+          const res = await api.get(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
+          setLessons(res.data);
           setLoading(false);
         } catch (error) {
           console.error('Error fetching sections:', error);
@@ -88,7 +91,29 @@ const CourseContentPage = () => {
 
 
   const markLessonComplete = (lessonId) => {
+    if(!isAuthenticated){
+      alert('Please login to save progress');
+      return;
+    }
     setCompletedLessons(prev => new Set([...prev, lessonId]));
+    try{
+      console.log(user_id);
+      console.log(course.id);
+      console.log(currentLesson);
+
+
+    const res = axios.post(`${live_url}/progress/save`,{
+        user_id:user_id,
+        course_id:course.id,
+        chapter_id:chapters[currentLesson].id,
+        status:true
+      })
+    }
+    catch(e){
+      console.log(e.response?.data)
+    }
+
+    
   };
 
   const navigateLesson = (direction) => {

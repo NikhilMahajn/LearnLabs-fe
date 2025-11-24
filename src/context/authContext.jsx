@@ -5,11 +5,13 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user_id,setUser] = useState();
 
   const checkAuth = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       setIsAuthenticated(false);
+      console.log("Toke missing in response");
       return;
     }
 
@@ -17,8 +19,11 @@ export const AuthProvider = ({ children }) => {
       const decoded = jwtDecode(token);
       const valid = decoded.exp * 1000 > Date.now();
       setIsAuthenticated(valid);
-    } catch {
+      console.log("user loggin"+decoded.user_id);
+      setUser(decoded.user_id);
+    } catch (e){
       setIsAuthenticated(false);
+      console.log(e)
     }
   };
 
@@ -40,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider 
-      value={{ isAuthenticated, login, logout }}>
+      value={{ isAuthenticated,user_id, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

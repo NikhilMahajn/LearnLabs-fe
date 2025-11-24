@@ -2,7 +2,7 @@ import CourseList from "../components/course/CourseGrid"
 import { Link, useNavigate } from "react-router-dom"
 import { useState,useEffect,useContext,createContext } from "react"
 import {live_url} from "../App"
-
+import api from "../api/axios"
 export const CourseListContext = createContext()
 
 function Home() {
@@ -11,20 +11,25 @@ function Home() {
   const popularSearches = ["React", "Python", "JavaScript", "CSS", "Node.js"]
   const [allCourses,setAllCourses] = useState([])
   const [courseList, setCourseList] = useState([])
-	 
-	useEffect(()=>{
-		async function fetch_courses(){
-			const data = await fetch(`${live_url}/course/`)
-			const jsonData = await data.json()
-			setCourseList(jsonData)
-      setAllCourses(jsonData)
-		}
-		fetch_courses()
+
+  useEffect(()=>{
+    const fetchCourses = async ()=> {
+      try{
+          const res = await api.get(`${live_url}/course/`);
+          setCourseList(res.data);
+          setAllCourses(res.data);
+      }
+      catch(e){
+        console.error("error fetching courses",e);
+      }
+    }
+		fetchCourses()
 	},[]
 )
+	 
   useEffect(() => {
     if (searchQuery.trim() === "") {
-      setCourseList(allCourses) // reset when empty
+      setCourseList(allCourses) 
     } else {
       const res = allCourses.filter(course =>
         course.title.toLowerCase().includes(searchQuery.toLowerCase())

@@ -3,42 +3,34 @@ import { Link } from "react-router-dom";
 import { live_url } from "../App";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import api from "../api/axios";
 
 export default function Login() {
   const [identifier, setIdentifier] = useState(""); // email or username
   const [password, setPassword] = useState("");
   const navigate = useNavigate()
-  const {isAuthenticated,login} = useAuth();
+  const {login} = useAuth();
   
   const handleLogin = async () => {
     if (!identifier) return alert("Enter email or username");
     if (!password) return alert("Enter password");
 
     try {
-      const res = await fetch(`${live_url}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identifier,
-          password,
-        }),
-      });
+      const res = await api.post("/auth/login", {
+        identifier,
+        password,
+          });
 
-      const data = await res.json();
-      console.log("Login Response:", data);
+      alert("Login successful!");
+      login(res.data.access_token);
+      navigate("/");
 
-      if (res.ok) {
-        alert("Login successful!");
-        login(data.access_token);
-        navigate("/");
-
-      } else {
-        alert(data.message || "Invalid credentials");
-      }
     } catch (error) {
       console.error(error);
-      alert("Network error!");
-    }
+
+      alert(error.response?.data?.message || "Invalid credentials");
+}
+
   };
 
   return (
