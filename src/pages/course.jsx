@@ -12,7 +12,7 @@ import api from '../api/axios';
 const CourseContentPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [currentLesson, setCurrentLesson] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState(new Set([0]));
+  const [completedLessons, setCompletedLessons] = useState(new Set([]));
   const [loading, setLoading] = useState(true);
   const [chapters, setChapterList] = useState([]);
   const [lessons, setLessons] = useState([]);
@@ -34,20 +34,19 @@ const CourseContentPage = () => {
     window.scrollTo(0,0)
   }, []);
 
-useEffect(() => {
-  const fetchCourseById = async () => {
-    try {
-      const res = await api.get(`/course/${id}`);
-      setCourse(res.data);
-    } catch (error) {
-      console.error("Error fetching course:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchCourseById = async () => {
+      try {
+        const res = await api.get(`/course/${id}`);
+        setCourse(res.data);
+      } catch (error) {
+        console.error("Error fetching course:", error);
+      }
+    };
 
-  if (id) fetchCourseById();
-}, [id]);
+    if (id) fetchCourseById();
+  }, [id]);
 
-  // First effect: Fetch chapters
   useEffect(() => {
     async function fetch_chapters(course_id) {
       try {
@@ -86,40 +85,63 @@ useEffect(() => {
     fetch_sections();
   }, [chapters, currentLesson]); // Runs when chapters or currentLesson changes
 
+  // Set completed chapters
+
+  useEffect(() => {
+  async function fetchCompleted() {
+    if (!isAuthenticated) return;
+
+    try {
+      const res = await api.get(`${live_url}/progress/get-progress`,{
+        params: {
+          user_id: user_id,
+          course_id: id
+        }
+      });
+            
+      const completedSet = new Set(res.data.map(item => item.chapter_id));
+
+      setCompletedLessons(completedSet);
+    } catch (e) {
+      console.log("Error fetching completed: ", e);
+    }
+  }
+
+  fetchCompleted();
+}, [isAuthenticated, id, user_id]);
+
+
   const progress = lessons.length > 0 ? ((completedLessons.size) / lessons.length) * 100 : 0;
   const currentLessonData = lessons[currentLesson] || null;
 
 
-  const markLessonComplete = (lessonId) => {
-    if(!isAuthenticated){
-      alert('Please login to save progress');
+  const markLessonComplete = async (lessonId) => {
+    if (!isAuthenticated) {
+      alert("Please login to save progress");
       return;
     }
-    setCompletedLessons(prev => new Set([...prev, lessonId]));
-    try{
-      console.log(user_id);
-      console.log(course.id);
-      console.log(currentLesson);
 
+    const chapterId = chapters[lessonId].id;
 
-    const res = axios.post(`${live_url}/progress/save`,{
-        user_id:user_id,
-        course_id:course.id,
-        chapter_id:chapters[currentLesson].id,
-        status:true
-      })
-    }
-    catch(e){
-      console.log(e.response?.data)
-    }
+    setCompletedLessons(prev => new Set([...prev, chapterId]));
 
-    
-  };
+    try {
+      await api.post(`${live_url}/progress/save`, {
+        user_id: user_id,
+        course_id: course.id,
+        chapter_id: chapterId,
+        status: true
+      });
+      } catch (error) {
+          console.error("Error saving progress: ", error);
+      }
+    };
+
 
   const navigateLesson = (direction) => {
     if (direction === 'next' && currentLesson < lessons.length - 1) {
       setCurrentLesson(currentLesson + 1);
-      markLessonComplete(currentLesson + 1);
+      markLessonComplete(currentLesson);
     } else if (direction === 'prev' && currentLesson > 0) {
       setCurrentLesson(currentLesson - 1);
     }
@@ -197,7 +219,7 @@ useEffect(() => {
           >
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
-                {completedLessons.has(index) ? (
+                {completedLessons.has(lesson.id) ? (
                   <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
                     <Check className="w-3 h-3 text-white" />
                   </div>
@@ -291,7 +313,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              {!completedLessons.has(currentLesson) && (
+              {!completedLessons.has(chapters[currentLesson].id) && (
                 <button
                   onClick={() => markLessonComplete(currentLesson)}
                   className="w-full lg:w-auto px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base font-medium flex items-center justify-center gap-2 flex-shrink-0"
