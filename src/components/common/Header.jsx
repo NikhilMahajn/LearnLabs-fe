@@ -36,7 +36,7 @@ function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {['home', 'courses', 'tutorials', 'code-help'].map((tab) => (
+            {['home', 'roadmaps', 'tutorials', 'code-help'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
