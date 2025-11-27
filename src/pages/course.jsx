@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import SectionRenderer from '../components/course/CourseContent';
 import { useAuth } from '../context/authContext';
 import api from '../api/axios';
-import TopBarLoader from '../components/common/loader';
 
 const CourseContentPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -18,15 +17,10 @@ const CourseContentPage = () => {
   const [chapters, setChapterList] = useState([]);
   const [lessons, setLessons] = useState([]);
 
-  const { id } = useParams();
+  const { slug } = useParams();
 
-  const [course, setCourse] = useState({
-    title: "Default Course",
-    description: "Default course description",
-    totalLessons: 12,
-    duration: "8 hours",
-    level: "Beginner",
-  })
+
+  const [course, setCourse] = useState()
 
   const topRef = useRef(null)
   const {isAuthenticated,user_id} = useAuth();
@@ -38,15 +32,14 @@ const CourseContentPage = () => {
   useEffect(() => {
     const fetchCourseById = async () => {
       try {
-        const res = await api.get(`/course/${id}`);
+        const res = await api.get(`/course/get-course-slug/${slug}`);
         setCourse(res.data);
       } catch (error) {
         console.error("Error fetching course:", error);
       }
     };
-
-    if (id) fetchCourseById();
-  }, [id]);
+    if (slug) fetchCourseById();
+  }, []);
 
   useEffect(() => {
     async function fetch_chapters(course_id) {
@@ -59,15 +52,17 @@ const CourseContentPage = () => {
         setLoading(false);
       }
     }
+    if(course){
+      fetch_chapters(course.id); 
 
-    fetch_chapters(id); 
+    }
 
     const interval = setInterval(() => {
-      fetch_chapters(id);
+      fetch_chapters(course.id);
     }, 30000); 
 
     return () => clearInterval(interval);
-  }, [id]); 
+  }, [course]); 
 
   useEffect(() => {
     async function fetch_sections() {
@@ -84,19 +79,18 @@ const CourseContentPage = () => {
     }
     
     fetch_sections();
-  }, [chapters, currentLesson]); // Runs when chapters or currentLesson changes
+  }, [chapters, currentLesson]); 
 
-  // Set completed chapters
 
   useEffect(() => {
   async function fetchCompleted() {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !course?.id) return;
 
     try {
       const res = await api.get(`${live_url}/progress/get-progress`,{
         params: {
           user_id: user_id,
-          course_id: id
+          course_id: course.id
         }
       });
             
@@ -109,7 +103,7 @@ const CourseContentPage = () => {
   }
 
   fetchCompleted();
-}, [isAuthenticated, id, user_id]);
+}, [isAuthenticated, course, user_id]);
 
 
   const progress = lessons.length > 0 ? ((completedLessons.size) / lessons.length) * 100 : 0;
