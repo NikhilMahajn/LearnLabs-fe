@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect, createContext } from "react"
 import { live_url } from "../App"
 import { useApi } from "../api/axios"
+import DynamicRoadmap from "../components/common/RoadmapHome"
 
 export const CourseListContext = createContext()
 
@@ -132,73 +133,23 @@ function Home() {
         {/* --- NEW ROADMAP SECTION --- */}
         <section id="roadmap-section" className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900">Where to Start?</h2>
-              <p className="mt-4 text-lg text-gray-600">Follow this roadmap to become a Frontend Developer</p>
+              <p className="mt-4 text-lg text-gray-600">
+                Follow this roadmap to become a Frontend Developer
+              </p>
             </div>
 
-            <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-              
-              {/* Connecting Line (Desktop Only) */}
-              <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-100 -z-10 transform -translate-y-1/2"></div>
-
-              {/* Step 1: HTML */}
-              <div 
-                onClick={() => handleRoadmapClick("HTML")}
-                className="cursor-pointer group relative bg-white p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-              >
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-                  1
-                </div>
-                <div className="mt-4 text-center">
-                  <div className="h-16 w-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <span className="text-2xl">📄</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">HTML Fundamentals</h3>
-                  <p className="text-gray-600 text-sm">Learn the structure of the web. Elements, tags, and accessibility.</p>
-                  <span className="mt-4 inline-block text-orange-600 text-sm font-semibold group-hover:underline">Browse HTML Courses &rarr;</span>
-                </div>
-              </div>
-
-              {/* Step 2: CSS */}
-              <div 
-                onClick={() => handleRoadmapClick("CSS")}
-                className="cursor-pointer group relative bg-white p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-              >
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-                  2
-                </div>
-                <div className="mt-4 text-center">
-                   <div className="h-16 w-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <span className="text-2xl">🎨</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">CSS Styling</h3>
-                  <p className="text-gray-600 text-sm">Make it beautiful. Layouts, flexbox, grid, and responsive design.</p>
-                  <span className="mt-4 inline-block text-blue-600 text-sm font-semibold group-hover:underline">Browse CSS Courses &rarr;</span>
-                </div>
-              </div>
-
-              {/* Step 3: JavaScript */}
-              <div 
-                onClick={() => handleRoadmapClick("JavaScript")}
-                className="cursor-pointer group relative bg-white p-8 rounded-2xl border border-gray-100 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-              >
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-md">
-                  3
-                </div>
-                <div className="mt-4 text-center">
-                   <div className="h-16 w-16 mx-auto bg-yellow-100 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <span className="text-2xl">⚡</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">JavaScript Logic</h3>
-                  <p className="text-gray-600 text-sm">Add interactivity. DOM manipulation, events, and programming logic.</p>
-                  <span className="mt-4 inline-block text-yellow-600 text-sm font-semibold group-hover:underline">Browse JS Courses &rarr;</span>
-                </div>
-              </div>
-
+            {/* FIXED: Remove grid layout */}
+            <div className="relative w-full">
+              <DynamicRoadmap slug="frontend" />
             </div>
+
           </div>
         </section>
+
+
         {/* --- END ROADMAP SECTION --- */}
 
         {/* Courses Section */}
