@@ -12,7 +12,7 @@ export default function CourseList() {
 	return (
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-center gap-9 ">
 				{courseList.map((item) => (
-				<Link to={`/course/${item.id}`}>
+				<Link to={`/course/${item.slug}`}>
 					<CourseCard course={item} />
 				</Link>
 				))}

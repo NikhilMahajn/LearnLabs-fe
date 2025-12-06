@@ -30,21 +30,42 @@ const CourseContentPage = () => {
   }, []);
 
   useEffect(() => {
+    let retryTimeout = null;
+
     const fetchCourseById = async () => {
       try {
-        const res = await api.get(`/course/get-course-slug/${slug}`);
+        const queryParams = new URLSearchParams(window.location.search);
+        const roadmap_slug = queryParams.get("roadmap_slug");
+
+        const res = await api.get(`/course/get-course-slug/${slug}`, {
+          params: { roadmap_slug }
+        });
+
+        if (!res.data?.id) {
+
+          retryTimeout = setTimeout(fetchCourseById, 4000);
+          return;
+        }
         setCourse(res.data);
+
       } catch (error) {
         console.error("Error fetching course:", error);
       }
     };
+
     if (slug) fetchCourseById();
-  }, []);
+
+    return () => {
+      if (retryTimeout) clearTimeout(retryTimeout);
+    };
+  }, [slug]);
+
+
 
   useEffect(() => {
     async function fetch_chapters(course_id) {
       try {
-        const res = await api.get(`${live_url}/course/chapters/${course_id}`);
+        const res = await api.get(`/course/chapters/${course_id}`);
         setChapterList(res.data);
         setLoading(false);
       } catch (error) {
@@ -68,7 +89,7 @@ const CourseContentPage = () => {
     async function fetch_sections() {
       if (chapters && chapters.length > 0 && chapters[currentLesson]) {
         try {
-          const res = await api.get(`${live_url}/course/chapters/${chapters[currentLesson].id}/sections`);
+          const res = await api.get(`/course/chapters/${chapters[currentLesson].id}/sections`);
           setLessons(res.data);
           setLoading(false);
         } catch (error) {
@@ -87,7 +108,7 @@ const CourseContentPage = () => {
     if (!isAuthenticated || !course?.id) return;
 
     try {
-      const res = await api.get(`${live_url}/progress/get-progress`,{
+      const res = await api.get(`/progress/get-progress`,{
         params: {
           user_id: user_id,
           course_id: course.id
@@ -121,7 +142,7 @@ const CourseContentPage = () => {
     setCompletedLessons(prev => new Set([...prev, chapterId]));
 
     try {
-      await api.post(`${live_url}/progress/save`, {
+      await api.post(`/progress/save`, {
         user_id: user_id,
         course_id: course.id,
         chapter_id: chapterId,

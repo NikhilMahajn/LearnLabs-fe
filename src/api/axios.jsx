@@ -2,6 +2,7 @@ import axios from "axios";
 import { useLoader } from "../context/loaderContext";
 
 const live_url = import.meta.env.VITE_API_URL;
+const base_url = import.meta.env.VITE_BASE_URL;
 
 const api = axios.create({
   baseURL: live_url,

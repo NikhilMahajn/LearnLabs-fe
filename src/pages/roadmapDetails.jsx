@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import { Link } from "react-router-dom";
 
 const RoadmapDetail = () => {
   const { slug } = useParams();
@@ -76,12 +77,12 @@ const RoadmapDetail = () => {
                     {step.description}
                   </p>
 
-                  <a
-                    href={`/course/${step.topic_slug}`}
+                  <Link
+                    to={`/course/${step.topic_slug}?roadmap_slug=${roadmap.slug}`}
                     className="inline-block mt-3 text-blue-600 font-medium hover:underline"
                   >
                     View Course →
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}
