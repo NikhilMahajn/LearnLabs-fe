@@ -73,7 +73,7 @@ const DynamicRoadmap = ({ slug }) => {
       {/* View All Button */}
       <div className="text-center mt-10">
         <Link
-          to={`/roadmap/${roadmap.slug}`}
+          to={`/roadmaps/${roadmap.slug}`}
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
         >
           View Full Roadmap →
